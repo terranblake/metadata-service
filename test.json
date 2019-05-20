@@ -1,0 +1,58 @@
+{
+    "0001011006": {
+        "sic": "NY",
+        "cik": "0001011006",
+        "state": null,
+        "name": "Altaba Inc",
+        "ticker": "AABA"
+    },
+    "0000006201": {
+        "sic": "4512",
+        "cik": "0000006201",
+        "state": "TX",
+        "name": "American Airlines Gp",
+        "ticker": "AAL"
+    },
+    "0000008177": {
+        "sic": "6311",
+        "cik": "0000008177",
+        "state": "GA",
+        "name": "Atlantic Amer Cp",
+        "ticker": "AAME"
+    },
+    "0001158114": {
+        "sic": "3674",
+        "cik": "0001158114",
+        "state": "TX",
+        "name": "Applied Optoelect",
+        "ticker": "AAOI"
+    },
+    "0000824142": {
+        "sic": "3585",
+        "cik": "0000824142",
+        "state": "OK",
+        "name": "Aaon Inc",
+        "ticker": "AAON"
+    },
+    "0000320193": {
+        "sic": "3571",
+        "cik": "0000320193",
+        "state": "CA",
+        "name": "Apple Inc",
+        "ticker": "AAPL"
+    },
+    "0001135185": {
+        "sic": "4522",
+        "cik": "0001135185",
+        "state": "NY",
+        "name": "Atlas Air Ww",
+        "ticker": "AAWW"
+    },
+    "0001069183": {
+        "sic": "3480",
+        "cik": "0001069183",
+        "state": "AZ",
+        "name": "Axon Inc",
+        "ticker": "AAXN"
+    }
+}
