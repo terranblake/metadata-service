@@ -51,7 +51,20 @@ def get_filing_metadata(ticker='AAPL', accession_number="0000320193-17-000070"):
     print('base', base_link)
 
     extensions = pd.read_html(filing_link)
-    extensions = pd.concat(extensions).to_json(orient='records')
+    extensions = pd.concat(extensions)
+    extensions.rename(
+        columns={
+            'Seq': 'sequence', 
+            'Description': 'description',
+            'Document': 'fileName',
+            'Type': 'fileType',
+            'Size': 'fileSize',
+            },
+        inplace=True
+    )
+    extensions['url'] = base_link + extensions.fileName
+    print(extensions)
+    extensions = extensions.to_json(orient='records')
     return extensions
 
 
