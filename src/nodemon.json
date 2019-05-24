@@ -1,0 +1,7 @@
+{
+    "verbose": true,
+    "ignore": ["./raw", "./json", ".pyc"],
+    "execMap": {
+      "py": "python3.7"
+    }
+  }

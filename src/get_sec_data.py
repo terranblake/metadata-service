@@ -12,9 +12,17 @@ from collections import namedtuple
 import os
 
 
+xbrl_units_registry = "http://www.xbrl.org/utr/utr.xml"
 sec_company_details = 'http://www.sec.gov/cgi-bin/browse-edgar?CIK={}&Find=Search&owner=exclude&action=getcompany'
 sec_base = 'https://www.sec.gov/Archives/edgar/data/'
-namespaces = { 'ns0': None, '@text': None }
+
+filings_namespaces = { 'ns0': None, '@text': None }
+units_namespaces = { 
+    'ns0': None, 
+    'ns1': None, 
+    '@id': 'id',
+}
+
 xbrl_types = {
     'presentation': 'pre',
     'calculation': 'calc',
@@ -38,7 +46,7 @@ def get_companies_csv():
     return pd.read_csv(path, '|')
 
 
-def __xml_to_json(xml_obj):
+def __xml_to_json(xml_obj, namespaces):
     return json.dumps(xmltodict.parse(ET.tostring(xml_obj), namespaces=namespaces))
 
 
@@ -107,6 +115,20 @@ def get_company(ticker='AAPL'):
         return None, None
 
 
+def get_all_units():
+    try:
+        f = requests.get(xbrl_units_registry, stream=True)
+        root = ET.fromstring(f.text)
+        root = root[0]
+
+        result = __xml_to_json(root, units_namespaces)
+        result = json.loads(result)
+        return { 'units': result['units']['unit'] }
+    except IndexError as e:
+        print('there was a problem units from xbrl registry')
+        return None, None
+
+
 def all_exchanges_to_json(path):
     files = []
     for r, d, f in os.walk(path):
@@ -159,7 +181,7 @@ def get_filings_by_type(ticker="AAPL", filing_type="10-K", limit="1"):
     [root[1].insert(node, i) for node, i in enumerate(root[2:])]
     root[1][1].text = "filings"
 
-    return __xml_to_json(root[1])
+    return __xml_to_json(root[1], filings_namespaces)
 
 
 # has ticker lists that are processed
@@ -167,6 +189,6 @@ def get_filings_by_type(ticker="AAPL", filing_type="10-K", limit="1"):
 # http://www.eoddata.com/symbols.aspx
 # exchange_to_json('NASDAQ')
 # all_exchanges_to_json('./raw')
-companies = get_companies_csv().to_json(orient='records')
-output_file = open('all_companies.json', "w")
-output_file.write(companies)
+# companies = get_companies_csv().to_json(orient='records')
+# output_file = open('./json/all_companies.json', "w")
+# output_file.write(companies)

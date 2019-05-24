@@ -3,7 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from json import dumps, loads
 from types import SimpleNamespace
 
-from get_sec_data import get_cik, get_company, get_filings_by_type, get_filing_metadata
+from get_sec_data import get_cik, get_company, get_all_units, get_filings_by_type, get_filing_metadata
 
 
 app = Flask(__name__)
@@ -33,6 +33,16 @@ class COMPANY(Resource):
         return result
 
 
+class UNIT(Resource):
+    def get(self):
+        args = valid_args(request.args, [ ])
+        if args is False:
+            return 'Invalid parameters'
+
+        result = get_all_units()
+        return result
+
+
 def reformat_dataframe(dei):
     keys = dei.ix[:,0].values.tolist()
     keys = [str(x) for x in keys]
@@ -59,6 +69,7 @@ def valid_args(body, expected_params):
 
 api.add_resource(FILING, '/filings')
 api.add_resource(COMPANY, '/companies')
+api.add_resource(UNIT, '/units')
 # api.add_resource(DEI, '/dei')
 
 
