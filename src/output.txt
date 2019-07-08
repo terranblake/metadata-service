@@ -1,0 +1,17 @@
+[33m[nodemon] 1.19.0[39m
+[33m[nodemon] reading config ./nodemon.json[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] or send SIGHUP to 44598 to restart[39m
+[33m[nodemon] ignoring: ./raw/**/* ./json/**/* .pyc[39m
+[33m[nodemon] watching: *.*[39m
+[33m[nodemon] watching extensions: py,json[39m
+[32m[nodemon] starting `python3.7 server.py`[39m
+[33m[nodemon] spawning[39m
+[33m[nodemon] child pid: 44600[39m
+[33m[nodemon] watching 9 files[39m
+ * Serving Flask app "server" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+[33m[nodemon] exiting[39m
