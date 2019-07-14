@@ -1,9 +1,9 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse
 from json import dumps, loads
 from types import SimpleNamespace
 
-from get_sec_data import get_cik, get_company, get_all_units, get_filings_by_type, get_filing_metadata
+from get_sec_data import get_cik, get_company, get_all_units, get_filings_by_type, get_filing_metadata, get_filing_documents
 
 
 app = Flask(__name__)
@@ -12,15 +12,21 @@ api = Api(app)
 
 class FILING(Resource):
     def get(self):
-        args = valid_args(request.args, [ 'ticker' ])
+        args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
         if args is False:
             return 'Invalid parameters'
 
-        # if (hasattr(args, 'filing_type') and args.accessionNumber is None):
-        #     result = get_filings_by_type(args.ticker, args.filing_type)
-        # else:
-        result = get_filing_metadata(args.ticker, args.accessionNumber)
-        return loads(result)
+        return get_filing_metadata(args.ticker, args.accessionNumber)
+
+
+class DOCUMENT(Resource):
+    def get(self):
+        print(request.args)
+        args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
+        if args is False:
+            return 'Invalid parameters'
+
+        return loads(get_filing_documents(args.ticker, args.accessionNumber))
 
 
 class COMPANY(Resource):
@@ -68,6 +74,7 @@ def valid_args(body, expected_params):
 
 
 api.add_resource(FILING, '/filings')
+api.add_resource(DOCUMENT, '/documents')
 api.add_resource(COMPANY, '/companies')
 api.add_resource(UNIT, '/units')
 # api.add_resource(DEI, '/dei')

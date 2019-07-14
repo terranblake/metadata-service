@@ -58,7 +58,32 @@ def __xml_to_json(xml_obj, namespaces):
     return json.dumps(xmltodict.parse(ET.tostring(xml_obj), namespaces=namespaces))
 
 
-def get_filing_metadata(ticker='AAPL', accession_number="0000320193-17-000070"):
+def get_filing_metadata(ticker='AAPL', accession_number=""):
+    company = get_company(ticker)
+
+    base_link = '{}{}/{}/'.format(sec_base, get_cik(ticker), nodash(accession_number))
+    filing_link = '{}{}-index.htm'.format(base_link, accession_number)
+    filing = {}
+
+    res = requests.get(filing_link, stream=True)
+    root = html.fromstring(res.content)
+
+    filing['source'] = 'sec'
+    filing['refCompanyId'] = root.xpath('//*[@id="filerDiv"]/div[3]/span/a')[0].text.split(' ')[0]
+    filing['type'] = root.xpath('//*[@id="filerDiv"]/div[3]/p/strong[4]')[0].text
+    filing['refId'] = accession_number
+    filing['period'] = root.xpath('//*[@id="formDiv"]/div[2]/div[2]/div[2]')[0].text
+    filing['fiscalYearEnd'] = root.xpath('//*[@id="filerDiv"]/div[3]/p/strong[3]')[0].text
+    filing['url'] = filing_link
+    filing['name'] = root.xpath('//*[@id="formName"]/strong')[0].text
+    filing['filedAt'] = root.xpath('//*[@id="formDiv"]/div[2]/div[1]/div[2]')[0].text
+    filing['acceptedAt'] = root.xpath('//*[@id="formDiv"]/div[2]/div[1]/div[4]')[0].text
+    filing['internalReveneServiceNumber'] = root.xpath('//*[@id="filerDiv"]/div[3]/p/strong[1]')[0].text
+
+    return filing
+
+
+def get_filing_documents(ticker='AAPL', accession_number="0000320193-17-000070"):
     company = get_company(ticker)
 
     base_link = '{}{}/{}/'.format(sec_base, get_cik(ticker), nodash(accession_number))
