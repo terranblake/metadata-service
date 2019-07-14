@@ -103,9 +103,10 @@ def get_company(ticker='AAPL'):
         t = html.fromstring(f.content)
 
         company = {}
-        company['sic'] = t.xpath('//*[@id="contentDiv"]/div[1]/div[3]/p/a[1]')[0].text.strip().lower()
+        company['ref'] = 'sec'
+        company['refIndustryId'] = t.xpath('//*[@id="contentDiv"]/div[1]/div[3]/p/a[1]')[0].text.strip().lower()
         cik = t.xpath('//*[@id="contentDiv"]/div[1]/div[3]/span/a')[0].text.split(' ')[0].strip().lower()
-        company['cik'] = cik.strip().lower()
+        company['refId'] = cik.strip().lower()
         company['state'] = t.xpath('//*[@id="contentDiv"]/div[1]/div[3]/p/a[2]')[0].text.strip().lower()
         company['name'] = t.xpath('//*[@id="contentDiv"]/div[1]/div[3]/span/text()[1]')[0].strip().lower()
         company['ticker'] = ticker.strip().lower()
