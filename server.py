@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from json import dumps, loads
 from types import SimpleNamespace

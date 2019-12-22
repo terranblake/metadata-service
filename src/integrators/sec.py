@@ -1,14 +1,10 @@
-import numpy as np, time
 import pandas as pd
 import re, requests, string, urllib
-import bs4 as bs
 import xml.etree.ElementTree as ET
 import xmltodict
 from lxml import html, etree
-from bs4 import BeautifulSoup
 import json
 import xml.dom.minidom
-from collections import namedtuple
 import os
 
 
@@ -27,13 +23,6 @@ units_namespaces = {
     '@id': 'id',
 }
 
-xbrl_types = {
-    'presentation': 'pre',
-    'calculation': 'calc',
-    'definition': 'def',
-    'label': 'lab'
-}
-
 
 def nodash(d): return ''.join(d.split('-'))
 
@@ -43,8 +32,6 @@ def __xml_to_json(xml_obj, namespaces):
 
 
 def get_filing_metadata(ticker='AAPL', accession_number=""):
-    company = get_company(ticker)
-
     base_link = '{}{}/{}/'.format(sec_base, get_cik(ticker), nodash(accession_number))
     filing_link = '{}{}-index.htm'.format(base_link, accession_number)
     filing = {}
@@ -68,8 +55,6 @@ def get_filing_metadata(ticker='AAPL', accession_number=""):
 
 
 def get_filing_documents(ticker='AAPL', accession_number="0000320193-17-000070"):
-    company = get_company(ticker)
-
     base_link = '{}{}/{}/'.format(sec_base, get_cik(ticker), nodash(accession_number))
     filing_link = '{}{}-index.htm'.format(base_link, accession_number)
 
