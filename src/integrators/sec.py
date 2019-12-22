@@ -38,22 +38,6 @@ xbrl_types = {
 def nodash(d): return ''.join(d.split('-'))
 
 
-def _json_object_hook(d): return namedtuple('X', d.keys())(*d.values())
-
-
-def json2obj(data): return json.loads(data, object_hook=_json_object_hook)
-
-
-def pretty_print_xml(xml_string):
-    dom = xml.dom.minidom.parseString(xml_string)
-    return dom.toprettyxml()
-
-
-def get_companies_csv():
-    path = './raw/cik_ticker.csv'
-    return pd.read_csv(path, '|')
-
-
 def __xml_to_json(xml_obj, namespaces):
     return json.dumps(xmltodict.parse(ET.tostring(xml_obj), namespaces=namespaces))
 
