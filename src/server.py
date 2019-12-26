@@ -88,7 +88,7 @@ def valid_args(body, expected_params):
 
 
 api.add_resource(FILING, '/filings')
-api.add_resource(DOCUMENT, '/documents')
+api.add_resource(DOCUMENT, '/filingdocuments')
 api.add_resource(COMPANY, '/companies')
 api.add_resource(UNIT, '/units')
 api.add_resource(EARNINGS, '/earnings')

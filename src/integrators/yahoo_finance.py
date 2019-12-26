@@ -19,10 +19,10 @@ earnings_format_date = {
 }
 
 # Earnings Call Time
-# 	Before Market Open
-# 	After Market Close
-# 	TAS (Transfer Agent System) -- https://www.sec.gov/fast-answers/answerstransferagenthtm.html
-#	Time Not Supplied
+# 	Before Market Open				<9AM EST
+# 	After Market Close				>3PM EST
+# 	TAS (Transfer Agent System)		https://www.sec.gov/fast-answers/answerstransferagenthtm.html
+#	Time Not Supplied				?
 
 earnings_format_ticker = earnings_format_date
 del earnings_format_ticker['Earnings Call Time']
