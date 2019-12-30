@@ -1,5 +1,7 @@
 import pandas as pd
-import moment
+from dateutil import parser
+import datetime
+from json import dumps
 
 # by date
 # https://finance.yahoo.com/calendar/earnings?from=2019-12-22&to=2019-12-28&day=2019-12-23
@@ -33,19 +35,25 @@ earnings_format_date['Earnings Call Time'] = 'callTime'
 # much further in advance
 earnings_format_ticker['Earnings Date'] = 'releaseTime'
 
+one_day = datetime.timedelta(days=1)
 date_format = 'YYYY-MM-DD'
 
 
 def get_earnings_calendar_by_day(date=None):
 	# the api only returns values if you give it a range of at
 	# least 3 days even if only looking at a day of data
-	start = moment.date(date).subtract(day=1).format(date_format)
-	end = moment.date(date).add(day=1).format(date_format)
+	date = parser.parse(date).date()
+	start = date - one_day
+	end = date + one_day
 
 	earnings_link = 'https://finance.yahoo.com/calendar/earnings?from={}&to={}&day={}'.format(start, end, date)
 	print(earnings_link)
 
-	tables = pd.read_html(earnings_link)
+	try:
+		tables = pd.read_html(earnings_link)
+	except ValueError as e:
+		return dumps({ "error": e.args[0] })
+
 	earnings_calendar = tables[0]
 
 	earnings_calendar.rename(columns=earnings_format_date, inplace=True)
@@ -58,13 +66,17 @@ def get_earnings_calendar_by_ticker(ticker=None):
 	earnings_link = 'https://finance.yahoo.com/calendar/earnings?symbol={}'.format(ticker)
 	print(earnings_link)
 
-	tables = pd.read_html(earnings_link)
+	try:
+		tables = pd.read_html(earnings_link)
+	except ValueError as e:
+		return dumps({ "error": e.args[0] })
+	
 	earnings_calendar = tables[0]
 
 	earnings_calendar.rename(columns=earnings_format_ticker, inplace=True)
 	del earnings_calendar['company']
 
 	# reformat the release time to a unix timestamp
-	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: moment.date(x.replace('EST', ' EST')).date)
+	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: parser.parse(x.replace('EST', ' EST'), tzinfos={'EST': 'UTC-5'}).timestamp())
 
 	return earnings_calendar.to_json(orient='records')
