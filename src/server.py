@@ -1,5 +1,5 @@
 from os import getenv
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse
 from json import dumps, loads
 from types import SimpleNamespace
@@ -11,6 +11,13 @@ from integrators.yahoo_finance import get_earnings_calendar_by_day, get_earnings
 app = Flask(__name__)
 api = Api(app)
 
+@app.route('/', methods = ['GET'])
+def index():
+    return jsonify({ 'message': 'ok' })
+
+@app.route('/favicon.ico', methods = ['GET'])
+def respond():
+    return jsonify({ 'message': 'ok' })
 
 class FILING(Resource):
     def get(self):
@@ -99,9 +106,8 @@ api.add_resource(COMPANY, '/companies')
 api.add_resource(UNIT, '/units')
 api.add_resource(EARNINGS, '/earnings')
 
-api.add_resource(BASE, '/')
-# api.add_resource(DEI, '/dei')
+api.add_resource(BASE, '/*')
 
 
 if __name__ == '__main__':
-    app.run(port=getenv('PORT', '5000'))
+    app.run(threaded=True, port=getenv('PORT', '5000'))
