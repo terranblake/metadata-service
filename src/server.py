@@ -1,6 +1,5 @@
 from os import getenv
 from flask import Flask, request, jsonify
-from flask_restful import Resource, Api, reqparse
 from json import dumps, loads
 from types import SimpleNamespace
 
@@ -9,66 +8,63 @@ from integrators.yahoo_finance import get_earnings_calendar_by_day, get_earnings
 
 
 app = Flask(__name__)
-api = Api(app)
 
 @app.route('/', methods = ['GET'])
 def index():
     return jsonify({ 'message': 'ok' })
 
-@app.route('/favicon.ico', methods = ['GET'])
-def respond():
-    return jsonify({ 'message': 'ok' })
 
-class FILING(Resource):
-    def get(self):
-        args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
-        if args is False:
-            return 'Invalid parameters'
+@app.route('/filings', methods = ['GET'])
+def filings(self):
+    args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
+    if args is False:
+        return 'Invalid parameters'
 
-        return get_filing_metadata(args.ticker, args.accessionNumber)
+    return get_filing_metadata(args.ticker, args.accessionNumber)
 
 
-class DOCUMENT(Resource):
-    def get(self):
-        args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
-        if args is False:
-            return 'Invalid parameters'
+@app.route('/filingdocuments', methods = ['GET'])
+def filingdocuments(self):
+    args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
+    if args is False:
+        return 'Invalid parameters'
 
-        return loads(get_filing_documents(args.ticker, args.accessionNumber))
-
-
-class COMPANY(Resource):
-    def get(self):
-        args = valid_args(request.args, [ 'ticker' ])
-        if args is False:
-            return 'Invalid parameters'
-
-        result = get_company(args.ticker)
-        return result
+    return loads(get_filing_documents(args.ticker, args.accessionNumber))
 
 
-class UNIT(Resource):
-    def get(self):
-        args = valid_args(request.args, [ ])
-        if args is False:
-            return 'Invalid parameters'
+@app.route('/companies', methods = ['GET'])
+def companies(self):
+    args = valid_args(request.args, [ 'ticker' ])
+    if args is False:
+        return 'Invalid parameters'
 
-        result = get_all_units()
-        return result
+    result = get_company(args.ticker)
+    return result
 
 
-class EARNINGS(Resource):
-    def get(self):
-        args = valid_args(request.args, [ ])
-        if args is False:
-            return 'Invalid parameters'
+@app.route('/units', methods = ['GET'])
+def units(self):
+    args = valid_args(request.args, [ ])
+    if args is False:
+        return 'Invalid parameters'
 
-        if hasattr(args, 'ticker'):
-            return loads(get_earnings_calendar_by_ticker(args.ticker))
-        elif hasattr(args, 'date'):
-            return loads(get_earnings_calendar_by_day(args.date))
-        else:
-            return 'Invalid parameters'
+    result = get_all_units()
+    return result
+
+
+@app.route('/earnings', methods = ['GET'])
+def earnings(self):
+    args = valid_args(request.args, [ ])
+    if args is False:
+        return 'Invalid parameters'
+
+    if hasattr(args, 'ticker'):
+        return loads(get_earnings_calendar_by_ticker(args.ticker))
+    elif hasattr(args, 'date'):
+        return loads(get_earnings_calendar_by_day(args.date))
+    else:
+        return 'Invalid parameters'
+
 
 def reformat_dataframe(dei):
     keys = dei.ix[:,0].values.tolist()
@@ -92,13 +88,6 @@ def valid_args(body, expected_params):
             return False
 
     return SimpleNamespace(**valid_args)
-
-
-api.add_resource(FILING, '/filings')
-api.add_resource(DOCUMENT, '/filingdocuments')
-api.add_resource(COMPANY, '/companies')
-api.add_resource(UNIT, '/units')
-api.add_resource(EARNINGS, '/earnings')
 
 
 if __name__ == '__main__':
