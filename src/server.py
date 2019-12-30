@@ -70,12 +70,6 @@ class EARNINGS(Resource):
         else:
             return 'Invalid parameters'
 
-
-class BASE(Resource):
-    def get(self):
-        return 'sup'
-
-
 def reformat_dataframe(dei):
     keys = dei.ix[:,0].values.tolist()
     keys = [str(x) for x in keys]
@@ -106,8 +100,6 @@ api.add_resource(COMPANY, '/companies')
 api.add_resource(UNIT, '/units')
 api.add_resource(EARNINGS, '/earnings')
 
-api.add_resource(BASE, '/*')
-
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=getenv('PORT', '5000'))
+    app.run(threaded=True, port=getenv('PORT', '5000'), host='0.0.0.0')
