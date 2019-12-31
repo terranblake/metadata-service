@@ -78,5 +78,4 @@ def get_earnings_calendar_by_ticker(ticker=None):
 
 	# reformat the release time to a unix timestamp
 	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: parser.parse(x.replace('EST', ' EST'), tzinfos={'EST': 'UTC-5'}).timestamp())
-
 	return earnings_calendar.to_json(orient='records')

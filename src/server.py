@@ -18,7 +18,7 @@ def index():
 def filings():
     args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
     if args is False:
-        return 'Invalid parameters'
+        return jsonify({ 'error': 'Invalid parameters' })
 
     return get_filing_metadata(args.ticker, args.accessionNumber)
 
@@ -27,7 +27,7 @@ def filings():
 def filingdocuments():
     args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
     if args is False:
-        return 'Invalid parameters'
+        return jsonify({ 'error': 'Invalid parameters' })
 
     return loads(get_filing_documents(args.ticker, args.accessionNumber))
 
@@ -36,7 +36,7 @@ def filingdocuments():
 def companies():
     args = valid_args(request.args, [ 'ticker' ])
     if args is False:
-        return 'Invalid parameters'
+        return jsonify({ 'error': 'Invalid parameters' })
 
     result = get_company(args.ticker)
     print(result)
@@ -47,7 +47,7 @@ def companies():
 def units():
     args = valid_args(request.args, [ ])
     if args is False:
-        return 'Invalid parameters'
+        return jsonify({ 'error': 'Invalid parameters' })
 
     result = get_all_units()
     return result
@@ -57,14 +57,14 @@ def units():
 def earnings():
     args = valid_args(request.args, [ ])
     if args is False:
-        return 'Invalid parameters'
+        return jsonify({ 'error': 'Invalid parameters' })
 
     if hasattr(args, 'ticker'):
-        return loads(get_earnings_calendar_by_ticker(args.ticker))
+        return get_earnings_calendar_by_ticker(args.ticker)
     elif hasattr(args, 'date'):
-        return loads(get_earnings_calendar_by_day(args.date))
+        return get_earnings_calendar_by_day(args.date)
     else:
-        return 'Invalid parameters'
+        return jsonify({ 'error': 'Invalid parameters' })
 
 
 def reformat_dataframe(dei):
