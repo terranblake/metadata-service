@@ -3,8 +3,8 @@ from flask import Flask, request, jsonify
 from json import dumps, loads
 from types import SimpleNamespace
 
-from integrators.sec import get_cik, get_company, get_all_units, get_filings_by_type, get_filing_metadata, get_filing_documents
-from integrators.yahoo_finance import get_earnings_calendar_by_day, get_earnings_calendar_by_ticker
+from integrations.sec import get_cik, get_company, get_all_units, get_filings_by_type, get_filing_metadata, get_filing_documents
+from integrations.yahoo_finance import get_earnings_calendar_by_day, get_earnings_calendar_by_ticker
 
 
 app = Flask(__name__)
@@ -39,6 +39,7 @@ def companies():
         return 'Invalid parameters'
 
     result = get_company(args.ticker)
+    print(result)
     return result
 
 
