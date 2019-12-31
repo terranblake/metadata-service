@@ -29,7 +29,7 @@ def filingdocuments():
     if args is False:
         return jsonify({ 'error': 'Invalid parameters' }), 200, { 'content-type': 'application/json' }
 
-    return loads(get_filing_documents(args.ticker, args.accessionNumber)), 200, { 'content-type': 'application/json' }
+    return get_filing_documents(args.ticker, args.accessionNumber), 200, { 'content-type': 'application/json' }
 
 
 @app.route('/companies', methods = ['GET'])
