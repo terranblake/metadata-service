@@ -15,7 +15,7 @@ def index():
 
 
 @app.route('/filings', methods = ['GET'])
-def filings(self):
+def filings():
     args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
     if args is False:
         return 'Invalid parameters'
@@ -24,7 +24,7 @@ def filings(self):
 
 
 @app.route('/filingdocuments', methods = ['GET'])
-def filingdocuments(self):
+def filingdocuments():
     args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
     if args is False:
         return 'Invalid parameters'
@@ -33,7 +33,7 @@ def filingdocuments(self):
 
 
 @app.route('/companies', methods = ['GET'])
-def companies(self):
+def companies():
     args = valid_args(request.args, [ 'ticker' ])
     if args is False:
         return 'Invalid parameters'
@@ -43,7 +43,7 @@ def companies(self):
 
 
 @app.route('/units', methods = ['GET'])
-def units(self):
+def units():
     args = valid_args(request.args, [ ])
     if args is False:
         return 'Invalid parameters'
@@ -53,7 +53,7 @@ def units(self):
 
 
 @app.route('/earnings', methods = ['GET'])
-def earnings(self):
+def earnings():
     args = valid_args(request.args, [ ])
     if args is False:
         return 'Invalid parameters'
