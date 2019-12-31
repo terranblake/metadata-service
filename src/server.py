@@ -18,18 +18,18 @@ def index():
 def filings():
     args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
     if args is False:
-        return jsonify({ 'error': 'Invalid parameters' })
+        return jsonify({ 'error': 'Invalid parameters' }), 200, { 'content-type': 'application/json' }
 
-    return get_filing_metadata(args.ticker, args.accessionNumber)
+    return get_filing_metadata(args.ticker, args.accessionNumber), 200, { 'content-type': 'application/json' }
 
 
 @app.route('/filingdocuments', methods = ['GET'])
 def filingdocuments():
     args = valid_args(request.args, [ 'ticker', 'accessionNumber' ])
     if args is False:
-        return jsonify({ 'error': 'Invalid parameters' })
+        return jsonify({ 'error': 'Invalid parameters' }), 200, { 'content-type': 'application/json' }
 
-    return loads(get_filing_documents(args.ticker, args.accessionNumber))
+    return loads(get_filing_documents(args.ticker, args.accessionNumber)), 200, { 'content-type': 'application/json' }
 
 
 @app.route('/companies', methods = ['GET'])
@@ -39,18 +39,17 @@ def companies():
         return jsonify({ 'error': 'Invalid parameters' })
 
     result = get_company(args.ticker)
-    print(result)
-    return result
+    return result, 200, { 'content-type': 'application/json' }
 
 
 @app.route('/units', methods = ['GET'])
 def units():
     args = valid_args(request.args, [ ])
     if args is False:
-        return jsonify({ 'error': 'Invalid parameters' })
+        return jsonify({ 'error': 'Invalid parameters' }), 200, { 'content-type': 'application/json' }
 
     result = get_all_units()
-    return result
+    return result, 200, { 'content-type': 'application/json' }
 
 
 @app.route('/earnings', methods = ['GET'])
@@ -60,11 +59,11 @@ def earnings():
         return jsonify({ 'error': 'Invalid parameters' })
 
     if hasattr(args, 'ticker'):
-        return get_earnings_calendar_by_ticker(args.ticker)
+        return get_earnings_calendar_by_ticker(args.ticker), 200, { 'content-type': 'application/json' }
     elif hasattr(args, 'date'):
-        return get_earnings_calendar_by_day(args.date)
+        return get_earnings_calendar_by_day(args.date), 200, { 'content-type': 'application/json' }
     else:
-        return jsonify({ 'error': 'Invalid parameters' })
+        return jsonify({ 'error': 'Invalid parameters' }), 200, { 'content-type': 'application/json' }
 
 
 def reformat_dataframe(dei):
