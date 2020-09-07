@@ -91,4 +91,5 @@ def valid_args(body, expected_params):
 
 
 if __name__ == '__main__':
+    print(app.url_map)
     app.run(threaded=True, port=getenv('PORT', '5000'), host='0.0.0.0')
