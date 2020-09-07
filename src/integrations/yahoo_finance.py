@@ -9,6 +9,11 @@ from json import dumps
 # by ticker
 # https://finance.yahoo.com/calendar/earnings?symbol=rost
 
+timezone_conversions = {
+	'EST': 'UTC-5',
+	'EDT': 'UTC-4'
+}
+
 earnings_format_date = {
 	'Symbol': 'ticker',					# Short-form name of the company releasing earnings
 	'Company': 'company',				# Long-form name of the company releasing earnings
@@ -76,6 +81,16 @@ def get_earnings_calendar_by_ticker(ticker=None):
 	earnings_calendar.rename(columns=earnings_format_ticker, inplace=True)
 	del earnings_calendar['company']
 
+	# put a space between the am/pm and the timezone declaration e.g. AMEST => AM EST
+	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: x.replace('AM', 'AM '))
+	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: x.replace('PM', 'PM '))
+
+	print(earnings_calendar['releaseTime'][0])
+
+	# note: earnings call times can change and likely will considering how the yahoo table shows all of these calls starting
+	# at 6AM EDT, when they normally actually end up starting hours later
+
 	# reformat the release time to a unix timestamp
-	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: parser.parse(x.replace('EST', ' EST'), tzinfos={'EST': 'UTC-5'}).timestamp())
+	earnings_calendar['releaseDate'] = earnings_calendar['releaseTime']
+	earnings_calendar['releaseTime'] = earnings_calendar['releaseTime'].apply(lambda x: parser.parse(x, tzinfos=timezone_conversions).date())
 	return earnings_calendar.to_json(orient='records')
