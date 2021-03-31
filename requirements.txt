@@ -1,7 +1,7 @@
 pandas==0.24.2
 requests==2.21.0
 urllib3==1.24.2
-lxml==4.3.2
+lxml==4.6.3
 xmltodict==0.12.0
 Flask==1.1.1
 html5lib==1.0.1
